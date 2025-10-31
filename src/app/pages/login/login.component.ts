@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router'; 
+import { RouterModule } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -13,8 +14,25 @@ import { RouterModule } from '@angular/router';
 export class LoginComponent {
   email = '';
   password = '';
+  serverError = '';
+  isSubmitting = false;
+
+  constructor(private authService: AuthService) {}
 
   onLogin() {
-    alert(`Email: ${this.email}\nPassword: ${this.password}`);
+    this.isSubmitting = true;
+    this.serverError = '';
+
+    const credentials = { email: this.email, password: this.password };
+    this.authService.login(credentials).subscribe({
+      next: (res) => {
+        alert(res.message || 'Logged in successfully!');
+        this.isSubmitting = false;
+      },
+      error: (err) => {
+        this.serverError = err.error?.error || 'Login failed!';
+        this.isSubmitting = false;
+      }
+    });
   }
 }
