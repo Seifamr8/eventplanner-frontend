@@ -1,48 +1,61 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
+import { RouterModule, Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-signup',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.css']
 })
 export class SignupComponent {
-  // match backend fields
   firstName = '';
   lastName = '';
+  birthDate = '';
   email = '';
   password = '';
-  birthDate = '';
+  confirmPassword = '';
+  serverError = '';
+  successMessage = '';
+  passwordMismatch = false;
+  isSubmitting = false;
 
-  message = '';
-  loading = false;
+  constructor(private authService: AuthService, private router: Router) {}
 
-  constructor(private http: HttpClient) {}
+  checkPasswordMatch() {
+    this.passwordMismatch = this.password !== this.confirmPassword;
+  }
 
   onSignup() {
-    this.loading = true;
-    const payload = {
-      firstName: this.firstName,
-      lastName: this.lastName,
+    this.serverError = '';
+    this.successMessage = '';
+    this.isSubmitting = true;
+
+    if (this.password !== this.confirmPassword) {
+      this.passwordMismatch = true;
+      this.isSubmitting = false;
+      return;
+    }
+
+    const userData = {
+      name: `${this.firstName} ${this.lastName}`,
       email: this.email,
       password: this.password,
       birthDate: this.birthDate
     };
 
-    this.http.post(`${environment.apiUrl}/register`, payload).subscribe({
+    this.authService.register(userData).subscribe({
       next: (res: any) => {
-        this.loading = false;
-        this.message = res?.message || 'Signed up successfully!';
-        // optionally navigate to login or clear form
+        this.isSubmitting = false;
+        this.successMessage = res?.message || 'Signup successful!';
+        setTimeout(() => this.router.navigate(['/login']), 1500);
       },
-      error: (err) => {
-        this.loading = false;
-        this.message = err?.error?.error || err?.error?.message || 'Signup failed';
+      error: (err: any) => {
+        this.isSubmitting = false;
+        this.serverError = err?.error?.error || 'Signup failed';
       }
     });
   }
