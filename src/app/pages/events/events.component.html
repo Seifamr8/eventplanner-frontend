@@ -1,0 +1,10 @@
+<h2>My Organized Events</h2>
+<div *ngFor="let e of organized">
+  <p>{{ e.title }} - {{ e.date }}</p>
+  <button (click)="delete(e.id)">Delete</button>
+</div>
+
+<h2>Events I'm Invited To</h2>
+<div *ngFor="let e of invited">
+  <p>{{ e.title }} - {{ e.date }}</p>
+</div>

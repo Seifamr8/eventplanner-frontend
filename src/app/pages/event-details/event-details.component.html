@@ -1,0 +1,14 @@
+<h2>Event Attendees</h2>
+
+<div *ngFor="let a of attendees">
+  <p>User {{ a.user_id }} - {{ a.role }} - {{ a.status }}</p>
+</div>
+
+<h3>Invite User</h3>
+<input [(ngModel)]="inviteUserId" placeholder="User ID">
+<button (click)="invite()">Invite</button>
+
+<h3>Your Attendance</h3>
+<button (click)="setStatus('Going')">Going</button>
+<button (click)="setStatus('Maybe')">Maybe</button>
+<button (click)="setStatus('Not Going')">Not Going</button>

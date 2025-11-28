@@ -1,0 +1,14 @@
+<h2>Create Event</h2>
+
+<div class="form">
+  <label>Title</label>
+  <input [(ngModel)]="title" />
+
+  <label>Description</label>
+  <textarea [(ngModel)]="description"></textarea>
+
+  <label>Date</label>
+  <input type="date" [(ngModel)]="date" />
+
+  <button (click)="createEvent()">Create Event</button>
+</div>

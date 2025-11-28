@@ -1,0 +1,38 @@
+<h2>Search Events & Tasks</h2>
+
+<div>
+  <input placeholder="Keyword" [(ngModel)]="keyword">
+  <input type="date" [(ngModel)]="start_date">
+  <input type="date" [(ngModel)]="end_date">
+
+  <select [(ngModel)]="role">
+    <option value="">Any role</option>
+    <option value="organizer">Organizer</option>
+    <option value="attendee">Attendee</option>
+  </select>
+
+  <select [(ngModel)]="type">
+    <option value="both">Both</option>
+    <option value="event">Events</option>
+    <option value="task">Tasks</option>
+  </select>
+
+  <button (click)="onSearch()">Search</button>
+</div>
+
+<hr>
+
+<div *ngFor="let r of results">
+  <div *ngIf="r.type === 'event'">
+    <h3>Event: {{ r.event.title }}</h3>
+    <p>{{ r.event.description }}</p>
+    <p>Date: {{ r.event.date }}</p>
+  </div>
+
+  <div *ngIf="r.type === 'task'">
+    <h3>Task: {{ r.task.title }}</h3>
+    <p>{{ r.task.description }}</p>
+    <p>Event: {{ r.event.title }}</p>
+  </div>
+  <hr>
+</div>
